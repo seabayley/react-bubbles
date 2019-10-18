@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { axiosWithAuth } from "../axiosWithAuth";
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 const initialColor = {
   color: "",
@@ -9,6 +11,7 @@ const initialColor = {
 const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [colorToAdd, setColorToAdd] = useState({});
 
   const editColor = color => {
     setEditing(true);
@@ -31,6 +34,25 @@ const ColorList = ({ colors, updateColors }) => {
       .delete(`http://localhost:5000/api/colors/${color.id}`)
       .catch(err => console.log(err))
   };
+
+  const handleChangeColorName = e => {
+    setColorToAdd({ ...colorToAdd, color: e.target.value })
+  }
+
+  const handleChangeColorHexValue = e => {
+    setColorToAdd({ ...colorToAdd, code: { ...colorToAdd.code, hex: e.target.value } })
+  }
+
+  const handleAddColor = () => {
+    axiosWithAuth()
+      .post("http://localhost:5000/api/colors", {
+        color: String(colorToAdd.color),
+        code: (colorToAdd.code)
+      })
+      .catch((err, msg) => {
+        console.log(err, msg)
+      })
+  }
 
   return (
     <div className="colors-wrap">
@@ -82,7 +104,26 @@ const ColorList = ({ colors, updateColors }) => {
         </form>
       )}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+      <form>
+        <TextField
+          id="color-name"
+          label="Name"
+          type="name"
+          name="color-name"
+          margin="normal"
+          variant="outlined"
+          onChange={handleChangeColorName}
+        />
+        <TextField
+          id="color-hex"
+          label="Hex"
+          type="name"
+          margin="normal"
+          variant="outlined"
+          onChange={handleChangeColorHexValue}
+        />
+        <Button color='primary' variant='contained' onClick={handleAddColor}>Add</Button>
+      </form>
     </div>
   );
 };
