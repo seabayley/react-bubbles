@@ -10,7 +10,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'))
 
   const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
+    <Route exact path="/BubblePage"
       {...rest}
       render={props =>
         token ? (
