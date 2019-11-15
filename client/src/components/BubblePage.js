@@ -17,7 +17,7 @@ const BubblePage = () => {
         setColorList(res.data)
       })
       .catch(err => console.log(err))
-  })
+  },[])
 
   if (colorList === []) {
     return <p> Loading...</p>
